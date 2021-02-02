@@ -1,0 +1,86 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.finogeeks.testdemo"
+        minSdkVersion 19
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "SDK_FINGERPRINT", "\"FE167D131259885814719E89E12DC496E9E69FEA904F2C592389DD2B82884E55\""
+        buildConfigField "String", "APP_KEY", "\"22LyZEib0gLTQdU3MUauAZvUIVniJTNgy7Vz/30fl44=\""
+        buildConfigField "String", "APP_SECRET", "\"3ecd8639934d9569\""
+        // API服务地址
+        buildConfigField "String", "API_URL", "\"https://open-test.fdep.cn\""
+        // API服务前缀
+        buildConfigField "String", "API_PREFIX", "\"/api/v1/mop/\""
+
+        ndk {
+            abiFilters "x86", "armeabi", 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+
+    packagingOptions {
+        // libsdkcore.so是被加固过的，不能被压缩，否则加载动态库时会报错
+        doNotStrip "*/x86/libsdkcore.so"
+        doNotStrip "*/x86_64/libsdkcore.so"
+        doNotStrip "*/armeabi/libsdkcore.so"
+        doNotStrip "*/armeabi-v7a/libsdkcore.so"
+        doNotStrip "*/arm64-v8a/libsdkcore.so"
+    }
+
+
+    signingConfigs {
+        debug {
+            keyAlias "FinApplet"
+            keyPassword "fino123456"
+            storeFile file("../sign/FinApplet")
+            storePassword "fino123456"
+        }
+        release {
+            keyAlias "FinApplet"
+            keyPassword "fino123456"
+            storeFile file("../sign/FinApplet")
+            storePassword "fino123456"
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.finogeeks.lib:finapplet:2.13.102'
+}
